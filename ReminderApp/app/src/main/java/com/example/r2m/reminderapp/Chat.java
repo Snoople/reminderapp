@@ -1,5 +1,6 @@
 package com.example.r2m.reminderapp;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -111,11 +112,13 @@ public class Chat extends AppCompatActivity {
 
         if(type == 1) {
             lp2.gravity = Gravity.LEFT;
-            textView.setBackgroundResource(R.drawable.bubble_in);
+           // textView.setBackgroundResource(R.drawable.bubble_in);
+            textView.setBackgroundColor(Color.LTGRAY);
+
         }
         else{
             lp2.gravity = Gravity.RIGHT;
-            textView.setBackgroundResource(R.drawable.bubble_out);
+            textView.setBackgroundColor(Color.YELLOW);
         }
         textView.setLayoutParams(lp2);
         layout.addView(textView);
