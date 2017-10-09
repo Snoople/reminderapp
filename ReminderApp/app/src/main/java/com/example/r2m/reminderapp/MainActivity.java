@@ -7,12 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -22,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final EditText editDate = (EditText)findViewById(R.id.editDate);
         final EditText editTime = (EditText)findViewById(R.id.editTime);
-       final EditText SentCheck = (EditText)findViewById(R.id.SentCheck);
+        final EditText SentCheck = (EditText)findViewById(R.id.SentCheck);
         final Button clicky = (Button)findViewById(R.id.Clicky);
+        Log.d("FCM", "Instance ID: " + FirebaseInstanceId.getInstance().getToken());
 
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -36,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, Login.class));
                 DatabaseReference myRef = database.getReference("message");
                 myRef.setValue("Hello, World!");
+
+                //this prints out the token in Console
+                //e.g.  D/App: Token [dA82roySUyA:APA91bFfcinKlKESFzkXUSaZKWSf0Hm_hlecRr3rQ3TYOdm0i5r0HeCoWxhOaXUXqADSaoCQHuRm2BdOZVfm20O0RFCoTUzBaw0JyUjwrOAbJ3gJtp_3DGUWZtzksulx6iNWURhFwckt]
+
+                String tkn = FirebaseInstanceId.getInstance().getToken();
+                Toast.makeText(MainActivity.this, "Current token ["+tkn+"]", Toast.LENGTH_LONG).show();
+                Log.d("App", "Token ["+tkn+"]");
+
             }
         });
 
