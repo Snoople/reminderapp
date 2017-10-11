@@ -18,6 +18,8 @@ package com.example.r2m.reminderapp;
 
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
@@ -25,6 +27,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
 
     private static final String TAG = "MyFirebaseIIDService";
+    DatabaseReference currentToken;
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -55,5 +58,11 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+
+        myRef.child(UserDetails.username).child("token").setValue(token);
+        //Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
+        //currentToken = database.getReference("users/" + UserDetails.username + "_" + UserDetails.chatWith);
     }
 }

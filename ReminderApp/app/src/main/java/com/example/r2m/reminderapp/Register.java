@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -93,6 +94,9 @@ public class Register extends AppCompatActivity {
 
                                     if (!obj.has(user)) {
                                         myRef.child(user).child("password").setValue(pass);
+                                        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                        myRef.child(user).child("token").setValue(refreshedToken);
+
                                         Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
                                     } else {
                                         Toast.makeText(Register.this, "username already exists", Toast.LENGTH_LONG).show();
