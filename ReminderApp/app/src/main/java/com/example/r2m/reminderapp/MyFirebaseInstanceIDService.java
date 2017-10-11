@@ -43,7 +43,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         // Instance ID token to your app server.
         sendRegistrationToServer(refreshedToken);
     }
-    // [END refresh_token]
+    // [END refresh_token]e
 
     /**
      * Persist token to third-party servers.
