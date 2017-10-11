@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -25,10 +26,12 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Register extends AppCompatActivity {
-    EditText editUsername, editPassword ;
+    EditText editUsername, editPassword, UsernameEdit;
     Button registerButton;
     String user, pass;
     TextView login;
@@ -36,6 +39,8 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressDialog progressDialog;
     private String TAG;
+    private FirebaseDatabase database;
+    private DatabaseReference reference1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +49,12 @@ public class Register extends AppCompatActivity {
 
         editUsername = (EditText)findViewById(R.id.username);
         editPassword = (EditText)findViewById(R.id.password);
+        UsernameEdit = (EditText)findViewById(R.id.UsernameEdit);
         registerButton = (Button)findViewById(R.id.registerButton);
         login = (TextView)findViewById(R.id.login);
 
         progressDialog = new ProgressDialog(this);
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +85,7 @@ public class Register extends AppCompatActivity {
                 // ...
             }
         };
-  //   String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                                     //   myRef.child(user).child("token").setValue(refreshedToken);
+
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,8 +94,9 @@ public class Register extends AppCompatActivity {
         });
     }
     private void registerUser() {
-        String email = editUsername.getText().toString().trim();
-        String password = editPassword.getText().toString().trim();
+       final String email = editUsername.getText().toString().trim();
+       final String password = editPassword.getText().toString().trim();
+        final String username = UsernameEdit.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Enter email plox", Toast.LENGTH_SHORT).show();
@@ -119,6 +125,12 @@ public class Register extends AppCompatActivity {
 
                             progressDialog.hide();
                         } else {
+                            reference1 = database.getReference("users");
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("email",email);
+                            map.put("token", FirebaseInstanceId.getInstance().getToken());
+                            //   myRef.child(user).child("token").setValue(refreshedToken);
+                            reference1.child(username).setValue(map);
                             Toast.makeText(Register.this, "woot", Toast.LENGTH_SHORT).show();
 
                             progressDialog.hide();
