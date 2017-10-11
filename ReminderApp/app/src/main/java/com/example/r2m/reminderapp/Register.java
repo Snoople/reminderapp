@@ -12,6 +12,7 @@ import android.widget.Toast;
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 import com.google.firebase.auth.AuthResult;
@@ -78,7 +79,8 @@ public class Register extends AppCompatActivity {
                 // ...
             }
         };
-
+  //   String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                     //   myRef.child(user).child("token").setValue(refreshedToken);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +103,7 @@ public class Register extends AppCompatActivity {
         Log.d("App", email +" " + password);
         progressDialog.setMessage("stealing your data");
         progressDialog.show();
-
+                                   
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
