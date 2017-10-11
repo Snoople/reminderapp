@@ -9,36 +9,45 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.annotation.NonNull;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+
+
 
 public class Register extends AppCompatActivity {
-    EditText username, password;
+    EditText editUsername, editPassword ;
     Button registerButton;
     String user, pass;
     TextView login;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private ProgressDialog progressDialog;
+    private String TAG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        username = (EditText)findViewById(R.id.username);
-        password = (EditText)findViewById(R.id.password);
+        editUsername = (EditText)findViewById(R.id.username);
+        editPassword = (EditText)findViewById(R.id.password);
         registerButton = (Button)findViewById(R.id.registerButton);
         login = (TextView)findViewById(R.id.login);
 
+        progressDialog = new ProgressDialog(this);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -48,80 +57,76 @@ public class Register extends AppCompatActivity {
             }
         });
 
+        //Firebase setup
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+
+
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    finish();
+                    startActivity(new Intent(Register.this, Users.class));
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+//                    finish();
+//                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+                // ...
+            }
+        };
+  //   String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                                     //   myRef.child(user).child("token").setValue(refreshedToken);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = username.getText().toString();
-                pass = password.getText().toString();
-
-                if(user.equals("")){
-                    username.setError("can't be blank");
-                }
-                else if(pass.equals("")){
-                    password.setError("can't be blank");
-                }
-                else if(!user.matches("[A-Za-z0-9]+")){
-                    username.setError("only alphabet or number allowed");
-                }
-                else if(user.length()<5){
-                    username.setError("at least 5 characters long");
-                }
-                else if(pass.length()<5){
-                    password.setError("at least 5 characters long");
-                }
-                else {
-                    final ProgressDialog pd = new ProgressDialog(Register.this);
-                    pd.setMessage("Loading...");
-                    pd.show();
-
-                    String url = "https://reminderapp-bf7f0.firebaseio.com/users.json";
-
-                    StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
-                        @Override
-                        public void onResponse(String s) {
-
-                            FirebaseDatabase database = FirebaseDatabase.getInstance();
-                            DatabaseReference myRef = database.getReference("users");
-                            //FirebaseDatabase reference = new FirebaseDatabase("https://reminderapp-bf7f0.firebaseio.com/users");
-
-                            if(s.equals("null")) {
-                                myRef.child(user).child("password").setValue(pass);
-                                Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                            }
-                            else {
-                                try {
-                                    JSONObject obj = new JSONObject(s);
-
-                                    if (!obj.has(user)) {
-                                        myRef.child(user).child("password").setValue(pass);
-                                        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                                        myRef.child(user).child("token").setValue(refreshedToken);
-
-                                        Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-                                    } else {
-                                        Toast.makeText(Register.this, "username already exists", Toast.LENGTH_LONG).show();
-                                    }
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            pd.dismiss();
-                        }
-
-                    },new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            System.out.println("" + volleyError );
-                            pd.dismiss();
-                        }
-                    });
-
-                    RequestQueue rQueue = Volley.newRequestQueue(Register.this);
-                    rQueue.add(request);
-                }
+                registerUser();
             }
         });
+    }
+    private void registerUser() {
+        String email = editUsername.getText().toString().trim();
+        String password = editPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this, "Enter email plox", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Enter secret plox", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("App", email +" " + password);
+        progressDialog.setMessage("stealing your data");
+        progressDialog.show();
+                                   
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(Register.this, "done goodfed",
+                                    Toast.LENGTH_SHORT).show();
+
+                            progressDialog.hide();
+                        } else {
+                            Toast.makeText(Register.this, "woot", Toast.LENGTH_SHORT).show();
+
+                            progressDialog.hide();
+                        }
+
+                        // ...
+                    }
+                });
+
     }
 }
