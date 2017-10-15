@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -58,7 +59,7 @@ public class Users extends AppCompatActivity {
 
         RequestQueue rQueue = Volley.newRequestQueue(Users.this);
         rQueue.add(request);
-
+        Toast.makeText(this, UserDetails.username, Toast.LENGTH_SHORT).show();
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
