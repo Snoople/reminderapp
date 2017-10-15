@@ -108,6 +108,10 @@ public class Register extends AppCompatActivity {
             Toast.makeText(this, "Enter secret plox", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (TextUtils.isEmpty(username)){
+            Toast.makeText(this,"username is blank dum dumb", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Log.d("App", email +" " + password);
         progressDialog.setMessage("stealing your data");
         progressDialog.show();
@@ -132,14 +136,17 @@ public class Register extends AppCompatActivity {
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("email",email);
                             map.put("token", FirebaseInstanceId.getInstance().getToken());
+                            map.put("nickname", username);
                             //   myRef.child(user).child("token").setValue(refreshedToken);
-                            reference1.child(username).setValue(map);
-                            Toast.makeText(Register.this, "failed noob", Toast.LENGTH_SHORT).show();
+                            reference1.child(username.toLowerCase()).setValue(map);
 
-                            Toast.makeText(Register.this, "Logged In", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(Register.this, "registered In", Toast.LENGTH_SHORT).show();
 
 
                             progressDialog.hide();
+                            finish();
+                            startActivity(new Intent(getApplicationContext(), Login.class));
                         }
 
                         // ...

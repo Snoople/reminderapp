@@ -108,7 +108,7 @@
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                    // String value = (String) dataSnapshot.child("users").getValue();
-String value = (String) dataSnapshot.child("users").child(username).child("email").getValue();
+                    String value = (String) dataSnapshot.child("users").child(username).child("email").getValue();
                     // do your stuff here with value
                     Log.d(TAG, "im called 3");
                     Log.d(TAG, "im called 3 " +  value);
