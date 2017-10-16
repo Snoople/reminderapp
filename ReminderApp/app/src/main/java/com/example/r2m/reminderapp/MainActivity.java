@@ -11,7 +11,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startActivity(new Intent(MainActivity.this, Login.class));
-        //test
     }
 }
 
