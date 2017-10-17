@@ -2,6 +2,8 @@ package com.example.r2m.reminderapp;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.google.firebase.database.ChildEventListener;
@@ -21,11 +22,17 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Chat extends AppCompatActivity {
     LinearLayout layout;
@@ -62,13 +69,25 @@ public class Chat extends AppCompatActivity {
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
 
+
+
                 if(!messageText.equals("")){
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("message", messageText);
                     map.put("user", UserDetails.username);
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
-                    sendFCMNotification();
+
+                    // Get a handler that can be used to post to the main thread
+                    Handler mainHandler = new Handler(Looper.getMainLooper());
+
+                    Runnable myRunnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            sendFCMNotification();
+                        } // This is your code
+                    };
+                    mainHandler.post(myRunnable);
                     messageArea.setText("");
                 }
             }
@@ -112,26 +131,51 @@ public class Chat extends AppCompatActivity {
         });
     }
 
+    //AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb
+    //dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ
+
     private void sendFCMNotification() {
 
         try {
             //TODO this FCM post request not working
 
-           // Log.d(TAG, "API CALL: POST "+url);
-            Toast.makeText(this, "Enter email plox", Toast.LENGTH_SHORT).show();
-            OutputStream output = null;
-            String query = "furnail_name=hell&hi=2";//use URLEncode here
-            URLConnection connection = new URL("https://fcm.googleapis.com/fcm/send").openConnection();
-            //String authString = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(),Base64.NO_WRAP);
-            connection.setRequestProperty("Authorization", "AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Accept-Charset", "UTF-8");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("To", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
-            connection.setRequestProperty("notification", "lolol");
-            output = connection.getOutputStream();
-            output.write(query.getBytes("UTF-8"));
-            //InputStream response = connection.getInputStream();
+//send Push Notification
+            HttpsURLConnection connection = null;
+            try {
+
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                connection = (HttpsURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "application/json");
+                //Put below you FCM API Key instead
+                connection.setRequestProperty("Authorization", "key=" + "AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb");
+
+                JSONObject root = new JSONObject();
+                JSONObject data = new JSONObject();
+                //data.put(KEY_FCM_TEXT, text);
+                //data.put(KEY_FCM_SENDER_ID, sender);
+                data.put("body", "lolol");
+                data.put("title", "uhhwhat");
+                root.put("notification", data);
+                root.put("to", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
+                byte[] outputBytes = root.toString().getBytes("UTF-8");
+                OutputStream os = connection.getOutputStream();
+                os.write(outputBytes);
+                os.flush();
+                os.close();
+                connection.getInputStream(); //do not remove this line. request will not work without it gg
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) connection.disconnect();
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

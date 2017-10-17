@@ -33,6 +33,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle("Message")
                 .setContentText(remoteMessage.getNotification().getBody())
                 .setAutoCancel(true)
+                .setSmallIcon(R.drawable.googleg_standard_color_18)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =
