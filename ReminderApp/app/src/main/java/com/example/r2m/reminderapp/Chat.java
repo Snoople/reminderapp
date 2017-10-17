@@ -12,13 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +34,7 @@ public class Chat extends AppCompatActivity {
     EditText messageArea;
     ScrollView scrollView;
     DatabaseReference reference1, reference2;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,8 @@ public class Chat extends AppCompatActivity {
 
         reference1.getDatabase();
 
+
+
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +68,7 @@ public class Chat extends AppCompatActivity {
                     map.put("user", UserDetails.username);
                     reference1.push().setValue(map);
                     reference2.push().setValue(map);
+                    sendFCMNotification();
                     messageArea.setText("");
                 }
             }
@@ -101,6 +110,33 @@ public class Chat extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void sendFCMNotification() {
+
+        try {
+            //TODO this FCM post request not working
+
+           // Log.d(TAG, "API CALL: POST "+url);
+            Toast.makeText(this, "Enter email plox", Toast.LENGTH_SHORT).show();
+            OutputStream output = null;
+            String query = "furnail_name=hell&hi=2";//use URLEncode here
+            URLConnection connection = new URL("https://fcm.googleapis.com/fcm/send").openConnection();
+            //String authString = "Basic " + Base64.encodeToString((username + ":" + password).getBytes(),Base64.NO_WRAP);
+            connection.setRequestProperty("Authorization", "AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb");
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("To", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
+            connection.setRequestProperty("notification", "lolol");
+            output = connection.getOutputStream();
+            output.write(query.getBytes("UTF-8"));
+            //InputStream response = connection.getInputStream();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addMessageBox(String message, int type){
