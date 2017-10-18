@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +44,8 @@ public class Chat extends AppCompatActivity {
     ScrollView scrollView;
     DatabaseReference reference1, reference2;
     private RequestQueue requestQueue;
+    private String TAG;
+    private String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,7 @@ public class Chat extends AppCompatActivity {
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         //Firebase.setAndroidContext(this);
         reference1 = database.getReference("messages/" + UserDetails.username + "_" + UserDetails.chatWith);
@@ -84,7 +88,28 @@ public class Chat extends AppCompatActivity {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                            sendFCMNotification();
+                          //  sendFCMNotification("cX4DqYU6hAk:APA91bHeGr40lA5GaAd_Zfs7DHwB7rbvA2uR6qlp4DENrPhQ8XPVmpHnztkTr3-WMyMEblFu10f69r5-NgqKdxRPxzjZ4j_W7DKISQudhCWkKozNtpHZYPdGr7YMRs1CIjBUwBFswzRk");
+                           // sendFCMNotification("dZJF8QH-swM:APA91bFpR-ZUn-sL7LiCEBmbWEjlnsDW_8PgzPPyFg3Xe7rdJX5h1SS4xeNvrv8jKthRr0ZMzIN1Nx2vYNCUcqdzDgZnPCCzdYdZXXsgMyXuX80gQosDHtkeZP8WMgdkGtShOhP28WNX");
+                            //sendFCMNotification("dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
+                            database.getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    // String value = (String) dataSnapshot.child("users").getValue();
+                                    value = (String) dataSnapshot.child("users").child(UserDetails.chatWith).child("token").getValue();
+                                    // do your stuff here with value
+                                    Log.d(TAG, "im called 3");
+                                    Log.d(TAG, "im called 3 " +  value);
+                                    sendFCMNotification(value);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+
+
+                            });
+
                         } // This is your code
                     };
                     mainHandler.post(myRunnable);
@@ -134,7 +159,7 @@ public class Chat extends AppCompatActivity {
     //AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb
     //dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ
 
-    private void sendFCMNotification() {
+    private void sendFCMNotification(String token) {
 
         try {
             //TODO this FCM post request not working
@@ -156,16 +181,21 @@ public class Chat extends AppCompatActivity {
                 JSONObject data = new JSONObject();
                 //data.put(KEY_FCM_TEXT, text);
                 //data.put(KEY_FCM_SENDER_ID, sender);
-                data.put("body", "lolol");
-                data.put("title", "uhhwhat");
+                data.put("body", "jason is poopy buttface");
+                data.put("title", "meowww2 u zxcvv");
                 root.put("notification", data);
-                root.put("to", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
+              // root.put("to", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
+                root.put("to",token);
+
+
+
                 byte[] outputBytes = root.toString().getBytes("UTF-8");
                 OutputStream os = connection.getOutputStream();
                 os.write(outputBytes);
                 os.flush();
                 os.close();
                 connection.getInputStream(); //do not remove this line. request will not work without it gg
+
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
