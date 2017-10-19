@@ -29,20 +29,19 @@
         TextView registerUser;
         EditText getUsername, getPassword;
         Button loginButton;
-        private String user, pass, username;
+        private String username;
         private FirebaseAuth mAuth;
         private FirebaseAuth.AuthStateListener mAuthListener;
         private ProgressDialog progressDialog;
         DatabaseReference reference;
         FirebaseDatabase database;
-        private String email;
         private static final String TAG = "LoginActivity";
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-            if (android.os.Build.VERSION.SDK_INT > 9) {
+            if (android.os.Build.VERSION.SDK_INT > 14) {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
             }
@@ -102,18 +101,13 @@
             }
 
 
-            progressDialog.setMessage("checking your secrets");
+            progressDialog.setMessage("Logging In");
             progressDialog.show();
             reference = database.getReference();
-            Log.d(TAG, "im called 1");
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                   // String value = (String) dataSnapshot.child("users").getValue();
                     String value = (String) dataSnapshot.child("users").child(username).child("email").getValue();
-                    // do your stuff here with value
-                    Log.d(TAG, "im called 3");
-                    Log.d(TAG, "im called 3 " +  value);
                     login(value, password);
                 }
 

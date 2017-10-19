@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,8 +41,6 @@ public class Chat extends AppCompatActivity {
     EditText messageArea;
     ScrollView scrollView;
     DatabaseReference reference1, reference2;
-    private RequestQueue requestQueue;
-    private String TAG;
     private String value;
 
     @Override
@@ -65,7 +61,6 @@ public class Chat extends AppCompatActivity {
         reference2 = database.getReference("messages/" + UserDetails.chatWith + "_" + UserDetails.username);
 
         reference1.getDatabase();
-
 
 
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -94,11 +89,7 @@ public class Chat extends AppCompatActivity {
                             database.getReference().addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    // String value = (String) dataSnapshot.child("users").getValue();
                                     value = (String) dataSnapshot.child("users").child(UserDetails.chatWith).child("token").getValue();
-                                    // do your stuff here with value
-                                    Log.d(TAG, "im called 3");
-                                    Log.d(TAG, "im called 3 " +  value);
                                     sendFCMNotification(value, messageText);
                                 }
 
@@ -121,7 +112,6 @@ public class Chat extends AppCompatActivity {
         reference1.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-               // Map map = dataSnapshot.getValue(Map.class);
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                 String message = map.get("message").toString();
                 String userName = map.get("user").toString();
@@ -174,17 +164,13 @@ public class Chat extends AppCompatActivity {
                 connection.setDoInput(true);
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("Content-Type", "application/json");
-                //Put below you FCM API Key instead
                 connection.setRequestProperty("Authorization", "key=" + "AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb");
 
                 JSONObject root = new JSONObject();
                 JSONObject data = new JSONObject();
-                //data.put(KEY_FCM_TEXT, text);
-                //data.put(KEY_FCM_SENDER_ID, sender);
                 data.put("body", reminderMessage);
                 data.put("title", "Message from " + UserDetails.chatWith);
                 root.put("notification", data);
-              // root.put("to", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
                 root.put("to",token);
 
 

@@ -60,9 +60,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
         // TODO: Implement this method to send token to your app server.
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("users");
-
         myRef.child(UserDetails.username).child("token").setValue(token);
-        //Toast.makeText(Register.this, "registration successful", Toast.LENGTH_LONG).show();
-        //currentToken = database.getReference("users/" + UserDetails.username + "_" + UserDetails.chatWith);
+
     }
 }
