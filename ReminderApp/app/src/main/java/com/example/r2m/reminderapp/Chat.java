@@ -159,7 +159,7 @@ public class Chat extends AppCompatActivity {
     //AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb
     //dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ
 
-    private void sendFCMNotification(String token, String message1) {
+    private void sendFCMNotification(String token, String reminderMessage) {
 
         try {
             //TODO this FCM post request not working
@@ -181,8 +181,8 @@ public class Chat extends AppCompatActivity {
                 JSONObject data = new JSONObject();
                 //data.put(KEY_FCM_TEXT, text);
                 //data.put(KEY_FCM_SENDER_ID, sender);
-                data.put("body", message1);
-                data.put("title", "meowww2 u zxcvv");
+                data.put("body", reminderMessage);
+                data.put("title", "Message from " + UserDetails.chatWith);
                 root.put("notification", data);
               // root.put("to", "dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
                 root.put("to",token);
