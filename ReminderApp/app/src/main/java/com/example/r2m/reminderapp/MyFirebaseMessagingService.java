@@ -30,7 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder notificationBuilder = new
                 NotificationCompat.Builder(this)
-                .setContentTitle("Message")
+                .setContentTitle("New Message")
                 .setContentText(remoteMessage.getNotification().getBody())
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.googleg_standard_color_18)
