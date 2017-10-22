@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,28 +48,29 @@ public class Chat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout)findViewById(R.id.layout2);
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
 
+        scrollToBottom();
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        //Firebase.setAndroidContext(this);
+        //Keeps the message box closed when you open the app initially
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         reference1 = database.getReference("messages/" + UserDetails.username + "_" + UserDetails.chatWith);
         reference2 = database.getReference("messages/" + UserDetails.chatWith + "_" + UserDetails.username);
 
         reference1.getDatabase();
 
-
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String messageText = messageArea.getText().toString();
-
-
+                //scrollToBottom();
 
                 if(!messageText.equals("")){
                     Map<String, String> map = new HashMap<String, String>();
@@ -83,12 +85,11 @@ public class Chat extends AppCompatActivity {
                     Runnable myRunnable = new Runnable() {
                         @Override
                         public void run() {
-                          //  sendFCMNotification("cX4DqYU6hAk:APA91bHeGr40lA5GaAd_Zfs7DHwB7rbvA2uR6qlp4DENrPhQ8XPVmpHnztkTr3-WMyMEblFu10f69r5-NgqKdxRPxzjZ4j_W7DKISQudhCWkKozNtpHZYPdGr7YMRs1CIjBUwBFswzRk");
-                           // sendFCMNotification("dZJF8QH-swM:APA91bFpR-ZUn-sL7LiCEBmbWEjlnsDW_8PgzPPyFg3Xe7rdJX5h1SS4xeNvrv8jKthRr0ZMzIN1Nx2vYNCUcqdzDgZnPCCzdYdZXXsgMyXuX80gQosDHtkeZP8WMgdkGtShOhP28WNX");
-                            //sendFCMNotification("dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ");
                             database.getReference().addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
+                                    scrollToBottom();
+
                                     value = (String) dataSnapshot.child("users").child(UserDetails.chatWith).child("token").getValue();
                                     sendFCMNotification(value, messageText);
                                 }
@@ -101,7 +102,7 @@ public class Chat extends AppCompatActivity {
 
                             });
 
-                        } // This is your code
+                        }
                     };
                     mainHandler.post(myRunnable);
                     messageArea.setText("");
@@ -110,6 +111,8 @@ public class Chat extends AppCompatActivity {
         });
 
         reference1.addChildEventListener(new ChildEventListener() {
+
+            //Adds the new message to database???
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
@@ -146,15 +149,11 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-    //AAAAJ6Ftp0Q:APA91bE_zC-a3x7_SobgoxfLeptgBUu5EUw4bCCxYW2SoKVr90cS6rvfSz7UhvmPjRAlXtgElKLXekTFYO9TVJSQLQPBXqHFEZgKsSSNs4yMqiK2ReIMcuzXTgwkp0ZoeZxP5xQF5HKb
-    //dtEW9bbkOf8:APA91bGN_oHvsik8x-mmhJOXqrc2k7G9m270j1Db5rqvKHWSzEzNScv5SveyERDiQ57wMnJtjCztTvqZ51VIUTkPjy90524KDDqwT3d-y2HbgtLPdFSu5j4_ydWBrTwi_4d6w_asTfXJ
-
+ //This sends a push notification to the user using a POST request
     private void sendFCMNotification(String token, String reminderMessage) {
 
         try {
-            //TODO this FCM post request not working
-
-//send Push Notification
+        //send Push Notification
             HttpsURLConnection connection = null;
             try {
 
@@ -172,8 +171,6 @@ public class Chat extends AppCompatActivity {
                 data.put("title", "Message from " + UserDetails.chatWith);
                 root.put("notification", data);
                 root.put("to",token);
-
-
 
                 byte[] outputBytes = root.toString().getBytes("UTF-8");
                 OutputStream os = connection.getOutputStream();
@@ -200,6 +197,7 @@ public class Chat extends AppCompatActivity {
     }
 
     public void addMessageBox(String message, int type){
+        scrollToBottom();
         TextView textView = new TextView(Chat.this);
         textView.setText(message);
 
@@ -218,6 +216,18 @@ public class Chat extends AppCompatActivity {
         }
         textView.setLayoutParams(lp2);
         layout.addView(textView);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+
     }
+
+    //This scrolls to the bottom of the chat page when called
+    public void scrollToBottom() {
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
+    }
+
+
 }
