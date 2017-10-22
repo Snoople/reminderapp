@@ -17,9 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
 /*TODO LIST
 1: Comments everything
-2:FCM token
-3: duplicate user
-4: duplicate email
 5: chat scroll and a lot more, no auto scroll
 5: chat scroll and a lot more, no auto scroll
 5: chat scroll and a lot more, no auto scroll

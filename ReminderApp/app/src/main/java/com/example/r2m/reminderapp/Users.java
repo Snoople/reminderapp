@@ -28,6 +28,7 @@ public class Users extends AppCompatActivity {
     ListView usersList;
     TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
+    ArrayList<String> a2 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
 
@@ -43,6 +44,7 @@ public class Users extends AppCompatActivity {
         pd.setMessage("Loading...");
         pd.show();
 
+        //generates a json string to get all users and their nicknames
         String url = "https://reminderapp-bf7f0.firebaseio.com/users.json";
 
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>(){
@@ -63,12 +65,13 @@ public class Users extends AppCompatActivity {
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                UserDetails.chatWith = al.get(position);
+                UserDetails.chatWith = a2.get(position);
                 startActivity(new Intent(Users.this, Chat.class));
             }
         });
     }
 
+    //itterates through a json string to populate usernames
     public void doOnSuccess(String s){
         try {
             JSONObject obj = new JSONObject(s);
@@ -80,7 +83,8 @@ public class Users extends AppCompatActivity {
                 key = i.next().toString();
 
                 if(!key.equals(UserDetails.username)) {
-                    al.add(key);
+                    a2.add(key);
+                    al.add(obj.optJSONObject(key).optString("nickname"));
                 }
 
                 totalUsers++;
@@ -90,6 +94,7 @@ public class Users extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //if users exist display list otherwise display no users text
         if(totalUsers <=1){
             noUsersText.setVisibility(View.VISIBLE);
             usersList.setVisibility(View.GONE);
