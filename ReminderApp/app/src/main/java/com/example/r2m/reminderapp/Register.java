@@ -151,7 +151,7 @@ public class Register extends AppCompatActivity {
 
         Log.d("App", email +" " + password);
         progressDialog.setMessage("stealing your data");
-        //progressDialog.show();
+        progressDialog.show();
                                    
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

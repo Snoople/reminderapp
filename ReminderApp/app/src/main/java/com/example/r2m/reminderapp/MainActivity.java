@@ -30,18 +30,20 @@ public class MainActivity extends AppCompatActivity {
                     // User is signed in
                    // Log.d("stuff", "onAuthStateChanged:signed_in:" + user.getUid());
                     //Log.d("stuff", "onAuthStateChanged:signed_in:" + user.getEmail());
-                    finish();
+
                    // UserDetails.username = ;
                     database.getReference("users").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
                             for (DataSnapshot imageSnapshot: dataSnapshot.getChildren()) {
+Log.d("snapshot", imageSnapshot.toString());
                       //          Log.d("stuff", "onAuthStateChanged:signed_in:" + imageSnapshot.child("email").getValue().toString());
                         //        Log.d("stuff", "onAuthStateChanged:signed_in:" + user.getEmail());
                                 if(imageSnapshot.child("email").getValue().toString().equals(user.getEmail()))
                                 {
                                     UserDetails.username =  imageSnapshot.getKey().toString();
-
+finish();
                                     startActivity(new Intent(getApplicationContext(), Users.class));
                                 }
                             }
