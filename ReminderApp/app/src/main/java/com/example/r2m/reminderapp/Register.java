@@ -13,7 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,21 +25,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.r2m.reminderapp.R.id.UsernameEdit;
+
 
 public class Register extends AppCompatActivity {
-    EditText editUsername, editPassword, UsernameEdit;
+    EditText editUsername, editPassword, usernameEdit, confirmPassword;
     Button registerButton;
     String user, pass;
     TextView login;
@@ -53,7 +50,8 @@ public class Register extends AppCompatActivity {
 
         editUsername = (EditText)findViewById(R.id.username);
         editPassword = (EditText)findViewById(R.id.password);
-        UsernameEdit = (EditText)findViewById(R.id.UsernameEdit);
+        confirmPassword = (EditText)findViewById(R.id.confirmPassword);
+        usernameEdit = (EditText)findViewById(UsernameEdit);
         registerButton = (Button)findViewById(R.id.registerButton);
         login = (TextView)findViewById(R.id.login);
 
@@ -100,32 +98,40 @@ public class Register extends AppCompatActivity {
     private void registerUser() {
         final String email = editUsername.getText().toString().trim();
         final String password = editPassword.getText().toString().trim();
-        final String username = UsernameEdit.getText().toString().trim();
+        final String confirmedPassword = confirmPassword.getText().toString().trim();
+        final String username = usernameEdit.getText().toString().trim();
+
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Enter email plox", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter an email", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Enter secret plox", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter a password", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "username is blank dum dumb", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Enter a username", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (!password.equalsIgnoreCase(confirmedPassword)) {
+            Toast.makeText(this, "Your passwords must match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         reference1 = database.getReference("users");
 
         reference1.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(username.toLowerCase())) {
-                    Toast.makeText(Register.this, "username already taken", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Register.this, "Username has already been taken", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else {
 
-                    registerUserFirbase(username, email, password);
+                    registerUserFirebase(username, email, password);
                 }
 
 
@@ -140,12 +146,12 @@ public class Register extends AppCompatActivity {
         });
 
     }
-    public void registerUserFirbase(final String username,final String email, final String password){
+    public void registerUserFirebase(final String username,final String email, final String password){
 
 
         Log.d("App", email +" " + password);
         progressDialog.setMessage("stealing your data");
-        progressDialog.show();
+        //progressDialog.show();
                                    
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
