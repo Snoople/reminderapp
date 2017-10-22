@@ -171,8 +171,8 @@ public class Chat extends AppCompatActivity {
                 JSONObject data = new JSONObject();
                 data.put("body", reminderMessage);
                 data.put("title", "Message from " + nickname);
-                data.put("sound", "Default");
-                data.put("click_action", "Register");
+                //data.put("sound", "Default");
+                data.put("click_action", "Chat");
                 root.put("notification", data);
                 root.put("to",token);
 

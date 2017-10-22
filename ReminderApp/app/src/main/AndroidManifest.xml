@@ -25,7 +25,12 @@
         <activity android:name=".Users" />
         <activity android:name=".Chat"
             android:configChanges="keyboardHidden"
-            />
+            >
+        <intent-filter>
+            <action android:name="Chat" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+        </activity>
 
         <service android:name=".MyFirebaseInstanceIDService">
             <intent-filter>
