@@ -52,7 +52,7 @@
             loginButton = (Button) findViewById(R.id.loginButton);
 
            database = FirebaseDatabase.getInstance();
-
+            mAuth = FirebaseAuth.getInstance();
 
             progressDialog = new ProgressDialog(this);
             registerUser.setOnClickListener(new View.OnClickListener() {
@@ -61,23 +61,7 @@
                     startActivity(new Intent(Login.this, Register.class));
                 }
             });
-            mAuth = FirebaseAuth.getInstance();
-            mAuthListener = new FirebaseAuth.AuthStateListener() {
-                @Override
-                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        // User is signed in
-                        Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), Users.class));
-                    } else {
-                        // User is signed out
-                        Log.d(TAG, "onAuthStateChanged:signed_out");
-                    }
-                    // ...
-                }
-            };
+
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -124,6 +108,7 @@
         }
 
         public void login(String email, String password){
+            Log.d("teststt",email +" " + password);
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -141,5 +126,8 @@
                         }
                     });
         }
+
+
+
     }
 

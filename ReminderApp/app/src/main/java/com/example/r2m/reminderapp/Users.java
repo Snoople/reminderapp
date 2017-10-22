@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +33,9 @@ public class Users extends AppCompatActivity {
     ArrayList<String> a2 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
+    private FirebaseAuth mAuth;
+    private Button logOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +44,23 @@ public class Users extends AppCompatActivity {
 
         usersList = (ListView)findViewById(R.id.usersList);
         noUsersText = (TextView)findViewById(R.id.noUsersText);
-
+        logOut = (Button)findViewById(R.id.logOut);
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() == null){
+            finish();
+            startActivity(new Intent(this, Login.class));
+        }
         pd = new ProgressDialog(Users.this);
         pd.setMessage("Loading...");
         pd.show();
+
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
 
         //generates a json string to get all users and their nicknames
         String url = "https://reminderapp-bf7f0.firebaseio.com/users.json";
@@ -106,5 +124,10 @@ public class Users extends AppCompatActivity {
         }
 
         pd.dismiss();
+    }
+    public void logout(){
+        mAuth.signOut();
+        finish();
+        startActivity(new Intent(this,Login.class));
     }
 }
