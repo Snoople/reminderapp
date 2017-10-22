@@ -14,9 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 
@@ -96,8 +98,8 @@ public class Register extends AppCompatActivity {
         });
     }
     private void registerUser() {
-       final String email = editUsername.getText().toString().trim();
-       final String password = editPassword.getText().toString().trim();
+        final String email = editUsername.getText().toString().trim();
+        final String password = editPassword.getText().toString().trim();
         final String username = UsernameEdit.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
@@ -108,10 +110,39 @@ public class Register extends AppCompatActivity {
             Toast.makeText(this, "Enter secret plox", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(username)){
-            Toast.makeText(this,"username is blank dum dumb", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(username)) {
+            Toast.makeText(this, "username is blank dum dumb", Toast.LENGTH_SHORT).show();
             return;
         }
+        reference1 = database.getReference("users");
+
+        reference1.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(username.toLowerCase())) {
+                    Toast.makeText(Register.this, "username already taken", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+
+                    registerUserFirbase(username, email, password);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+        });
+
+    }
+    public void registerUserFirbase(final String username,final String email, final String password){
+
+
         Log.d("App", email +" " + password);
         progressDialog.setMessage("stealing your data");
         progressDialog.show();
@@ -132,7 +163,7 @@ public class Register extends AppCompatActivity {
                             progressDialog.hide();
                         } else {
 
-                            reference1 = database.getReference("users");
+
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("email",email);
                             map.put("token", FirebaseInstanceId.getInstance().getToken());
