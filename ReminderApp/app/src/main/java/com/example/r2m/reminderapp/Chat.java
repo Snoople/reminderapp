@@ -1,10 +1,12 @@
 package com.example.r2m.reminderapp;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +45,7 @@ public class Chat extends AppCompatActivity {
     ScrollView scrollView;
     DatabaseReference reference1, reference2;
     private String value;
-
+Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,24 @@ public class Chat extends AppCompatActivity {
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
+        Intent startingIntent = getIntent();
+        if (startingIntent.getExtras() != null)
+        {
+           //
+            for (String key : startingIntent.getExtras().keySet())
+            {
 
+                Log.d("debug", startingIntent.getStringExtra(key));
+                if(key.equals("chat with")){
+                    UserDetails.chatWith = startingIntent.getStringExtra(key);
+                }
+                else if (key.equals("chat from")){
+                   UserDetails.username = startingIntent.getStringExtra(key);
+                }
+            }
+        }
+        Log.d("usersChatWith",UserDetails.chatWith);
+        Log.d("usersLoggedIn",UserDetails.username);
         scrollToBottom();
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -169,12 +188,18 @@ public class Chat extends AppCompatActivity {
 
                 JSONObject root = new JSONObject();
                 JSONObject data = new JSONObject();
+                JSONObject dataPayload = new JSONObject();
                 data.put("body", reminderMessage);
                 data.put("title", "Message from " + nickname);
                 //data.put("sound", "Default");
+                dataPayload.put("chat with", nickname.toLowerCase());
+                dataPayload.put("chat from",UserDetails.chatWith);
+//                root.put("data",new JSONObject().put("chat with",nickname));
+                root.put("data",dataPayload);
                 data.put("click_action", "Chat");
                 root.put("notification", data);
                 root.put("to",token);
+
 
 
                 byte[] outputBytes = root.toString().getBytes("UTF-8");

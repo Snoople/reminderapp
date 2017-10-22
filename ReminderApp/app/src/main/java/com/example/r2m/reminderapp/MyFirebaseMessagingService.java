@@ -30,8 +30,27 @@ Intent intent;
             intent =  new Intent(click_action);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        try {
+            Log.d("message","s");
+            //Log.d("message", remoteMessage.getTo());
+            Log.d("message", remoteMessage.getFrom());
+            Log.d("message", remoteMessage.getData().get("chat with"));
+            Log.d("message", remoteMessage.getData().get("chat from"));
+            intent.putExtra("chat with",remoteMessage.getData().get("chat with"));
+            intent.putExtra("chat from",remoteMessage.getData().get("chat from"));
+            Log.d("message","s");
+        }
+        catch(NullPointerException e){
+            Log.d("message","null");
+        }
+
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1410,
                 intent, PendingIntent.FLAG_ONE_SHOT);
+//intent.putExtra("chat with",remoteMessage.get)
+
+
 
         NotificationCompat.Builder notificationBuilder = new
                 NotificationCompat.Builder(this)
