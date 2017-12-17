@@ -103,5 +103,6 @@ public class MainActivity extends AppCompatActivity {
 8: log out button
 9: Token randomly changes
 10: talking to youself makes u switch user
+11: vibrate when u get notification
  */
 
