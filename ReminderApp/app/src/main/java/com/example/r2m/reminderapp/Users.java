@@ -2,8 +2,8 @@ package com.example.r2m.reminderapp;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,6 +85,7 @@ public class Users extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 UserDetails.chatWith = a2.get(position);
+                Log.d("wwho am i talking to",a2.get(position));
                 startActivity(new Intent(Users.this, Chat.class));
             }
         });

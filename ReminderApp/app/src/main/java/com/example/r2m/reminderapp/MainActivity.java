@@ -94,6 +94,6 @@ public class MainActivity extends AppCompatActivity {
 6: more notifcation working shit
 7: add confrim password
 8: log out button
-
+9: Token randomly changes
  */
 

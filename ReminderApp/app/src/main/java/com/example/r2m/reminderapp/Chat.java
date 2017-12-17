@@ -62,7 +62,7 @@ Intent intent;
             for (String key : startingIntent.getExtras().keySet())
             {
 
-                Log.d("debug", startingIntent.getStringExtra(key));
+                //Log.d("debug", startingIntent.getStringExtra(key));
                 if(key.equals("chat with")){
                     UserDetails.chatWith = startingIntent.getStringExtra(key);
                 }
