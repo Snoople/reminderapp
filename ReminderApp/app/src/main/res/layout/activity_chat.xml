@@ -10,7 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="com.example.r2m.reminderapp.Chat">
-<ScrollView
+
+
+    <ScrollView
 android:layout_width="match_parent"
 android:layout_weight="20"
 android:layout_height="wrap_content"
