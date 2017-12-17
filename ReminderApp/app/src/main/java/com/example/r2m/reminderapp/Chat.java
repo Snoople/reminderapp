@@ -85,6 +85,7 @@ Intent intent;
 
         reference1.getDatabase();
 
+        //What happens when you click the send a message button
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
