@@ -8,6 +8,8 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -55,6 +57,9 @@ Intent intent;
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
+
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent startingIntent = getIntent();
         if (startingIntent.getExtras() != null)
         {
@@ -62,7 +67,6 @@ Intent intent;
             for (String key : startingIntent.getExtras().keySet())
             {
 
-                //Log.d("debug", startingIntent.getStringExtra(key));
                 if(key.equals("chat with")){
                     UserDetails.chatWith = startingIntent.getStringExtra(key);
                 }
@@ -261,4 +265,18 @@ Intent intent;
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 }
