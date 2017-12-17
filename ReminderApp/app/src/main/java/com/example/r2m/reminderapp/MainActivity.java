@@ -3,9 +3,16 @@ package com.example.r2m.reminderapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         startActivity(new Intent(MainActivity.this, Login.class));
 
-        /**
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -67,19 +74,19 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-**/
+
     }
     @Override
     public void onStart() {
         super.onStart();
-//        mAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
     @Override
     public void onStop() {
         super.onStop();
-        //if (mAuthListener != null) {
-          //  mAuth.removeAuthStateListener(mAuthListener);
-       // }
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 }
 
@@ -95,5 +102,6 @@ public class MainActivity extends AppCompatActivity {
 7: add confrim password
 8: log out button
 9: Token randomly changes
+10: talking to youself makes u switch user
  */
 
