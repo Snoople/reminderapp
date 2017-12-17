@@ -269,11 +269,21 @@ Intent intent;
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                startActivity(new Intent(Chat.this, Users.class));
                 finish();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(Chat.this, Users.class));
+        finish();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
