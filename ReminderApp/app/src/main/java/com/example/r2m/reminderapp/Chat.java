@@ -78,7 +78,7 @@ Intent intent;
         Log.d("usersChatWith",UserDetails.chatWith);
         Log.d("usersLoggedIn",UserDetails.username);
         scrollToBottom();
-
+        setTitle(UserDetails.username +" is talking with " + UserDetails.chatWith);
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         //Keeps the message box closed when you open the app initially

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-       
+
 
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
