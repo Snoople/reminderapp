@@ -3,16 +3,9 @@ package com.example.r2m.reminderapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
+        startActivity(new Intent(MainActivity.this, Login.class));
+
+        /**
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -41,13 +37,13 @@ public class MainActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             for (DataSnapshot imageSnapshot: dataSnapshot.getChildren()) {
-Log.d("snapshot", imageSnapshot.toString());
-                      //          Log.d("stuff", "onAuthStateChanged:signed_in:" + imageSnapshot.child("email").getValue().toString());
+                                  Log.d("snapshot", imageSnapshot.toString());
+                        //        Log.d("stuff", "onAuthStateChanged:signed_in:" + imageSnapshot.child("email").getValue().toString());
                         //        Log.d("stuff", "onAuthStateChanged:signed_in:" + user.getEmail());
                                 if(imageSnapshot.child("email").getValue().toString().equals(user.getEmail()))
                                 {
                                     UserDetails.username =  imageSnapshot.getKey().toString();
-finish();
+                                    finish();
                                     startActivity(new Intent(getApplicationContext(), Users.class));
                                 }
                             }
@@ -71,18 +67,19 @@ finish();
             }
         };
 
-
+**/
     }
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);}
+//        mAuth.addAuthStateListener(mAuthListener);
+    }
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+        //if (mAuthListener != null) {
+          //  mAuth.removeAuthStateListener(mAuthListener);
+       // }
     }
 }
 
