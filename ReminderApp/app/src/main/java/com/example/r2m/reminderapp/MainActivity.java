@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        startActivity(new Intent(MainActivity.this, Login.class));
+       
 
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -51,7 +51,14 @@ public class MainActivity extends AppCompatActivity {
                                 {
                                     UserDetails.username =  imageSnapshot.getKey().toString();
                                     finish();
-                                    startActivity(new Intent(getApplicationContext(), Users.class));
+                                    if(UserDetails.username.isEmpty()){
+                                        mAuth.signOut();
+                                        finish();
+                                        startActivity(new Intent(getApplicationContext(), Users.class));
+                                    }
+                                    else {
+                                        startActivity(new Intent(getApplicationContext(), Users.class));
+                                    }
                                 }
                             }
 
