@@ -70,4 +70,5 @@
         android:text="Click here to Login"
         android:textSize="20dp" />
 
+
 </LinearLayout>

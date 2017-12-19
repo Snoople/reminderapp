@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,12 +9,6 @@
     tools:context="com.example.r2m.reminderapp.Users"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/logOut"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="how can i quit you" />
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,10 +16,35 @@
         android:id="@+id/noUsersText"
         android:visibility="gone"/>
 
-    <ListView
+
+
+
+
+        <Button
+            android:id="@+id/toReminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="To Reminder"
+            android:layout_alignParentTop="true"/>
+
+        <ListView
+            android:id="@+id/usersList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/logOut"
+            android:layout_below="@+id/toReminder"/>
+
+    <Button
+        android:id="@+id/logOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usersList"/>
-</LinearLayout>
+        android:text="how can i quit you"
+        android:layout_alignParentBottom="true"/>
+
+
+
+
+
+</RelativeLayout>
 
 
