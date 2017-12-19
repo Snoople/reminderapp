@@ -35,7 +35,7 @@ public class Users extends AppCompatActivity {
     int totalUsers = 0;
     ProgressDialog pd;
     private FirebaseAuth mAuth;
-    private Button logOut;
+    private Button logOut, toReminder;
 
 
     @Override
@@ -46,6 +46,7 @@ public class Users extends AppCompatActivity {
         usersList = (ListView)findViewById(R.id.usersList);
         noUsersText = (TextView)findViewById(R.id.noUsersText);
         logOut = (Button)findViewById(R.id.logOut);
+        toReminder = (Button)findViewById(R.id.toReminder);
         mAuth = FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser() == null){
             finish();
@@ -59,6 +60,12 @@ public class Users extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 logout();
+            }
+        });
+        toReminder.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                startActivity(new Intent(Users.this,Reminder.class));
             }
         });
 
