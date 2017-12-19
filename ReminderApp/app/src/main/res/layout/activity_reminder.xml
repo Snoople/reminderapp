@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name" />
 
         <EditText
             android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name" />
 
         <EditText
             android:layout_width="match_parent"
@@ -45,7 +45,13 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:hint="Name" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Whats the time Mr Wolf"
+            android:id="@+id/buttonTimePicker"/>
 
 
         <TimePicker
@@ -53,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/editTime"
+            android:visibility="gone"
             />
 
         <include

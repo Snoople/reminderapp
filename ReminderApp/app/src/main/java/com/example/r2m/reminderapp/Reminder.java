@@ -3,21 +3,26 @@ package com.example.r2m.reminderapp;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
 
-public class Reminder extends AppCompatActivity {
+public class Reminder extends AppCompatActivity implements View.OnClickListener{
 
     TimePicker editTime;
+    Button buttonTimePicker;
+    private int toggle;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reminder);
-
+toggle = 1;
         editTime = (TimePicker)findViewById(R.id.editTime);
+        buttonTimePicker=(Button)findViewById(R.id.buttonTimePicker);
 
+buttonTimePicker.setOnClickListener(this);
 
 //        editDate.setVisibility(View.VISIBLE);
 
@@ -42,4 +47,18 @@ public class Reminder extends AppCompatActivity {
 //
 //        }
 //    }
+@Override
+public void onClick(View v) {
+    if (v == buttonTimePicker) {
+        if(toggle==1) {
+            editTime.setVisibility(View.VISIBLE);
+            toggle=0;
+        }
+        else{
+            editTime.setVisibility(View.GONE);
+            toggle=1;
+        }
+
+    }
+}
 }
