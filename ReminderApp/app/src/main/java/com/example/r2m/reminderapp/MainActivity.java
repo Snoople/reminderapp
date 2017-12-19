@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -54,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
                                     if(UserDetails.username.isEmpty()){
                                         mAuth.signOut();
                                         finish();
-                                        startActivity(new Intent(getApplicationContext(), Users.class));
+                                        startActivity(new Intent(getApplicationContext(), Login.class));
                                     }
                                     else {
+                                        //code to change token to whoever logged in
+                                        database.getReference().child("users").child(UserDetails.username).child("token").setValue(FirebaseInstanceId.getInstance().getToken());
                                         startActivity(new Intent(getApplicationContext(), Users.class));
                                     }
                                 }
