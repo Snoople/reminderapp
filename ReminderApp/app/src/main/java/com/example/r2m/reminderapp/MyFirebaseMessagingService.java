@@ -58,6 +58,7 @@ Intent intent;
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(remoteMessage.getNotification().getTitle())
                 .setContentText(remoteMessage.getNotification().getBody())
+                .setVibrate(new long[]{0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500})
                 .setAutoCancel(true)
                 .setSmallIcon(R.drawable.googleg_standard_color_18)
                 .setContentIntent(pendingIntent);
