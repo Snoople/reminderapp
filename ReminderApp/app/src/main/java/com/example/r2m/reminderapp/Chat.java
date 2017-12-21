@@ -196,7 +196,7 @@ Intent intent;
                 JSONObject dataPayload = new JSONObject();
                 data.put("body", reminderMessage);
                 data.put("title", "Message from " + nickname);
-                //data.put("sound", "Default");
+                data.put("sound", "default");
                 dataPayload.put("chat with", nickname.toLowerCase());
                 dataPayload.put("chat from",UserDetails.chatWith);
 //                root.put("data",new JSONObject().put("chat with",nickname));
