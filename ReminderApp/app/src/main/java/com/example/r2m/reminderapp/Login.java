@@ -92,7 +92,12 @@
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String value = (String) dataSnapshot.child("users").child(username).child("email").getValue();
-                    login(value, password);
+                    if (value == null) {
+                        //this is a bit dodgy but it works
+                        login("notaname@email.com", password);
+                    }else {
+                        login(value, password);
+                    }
                 }
 
                 @Override
